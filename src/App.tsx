@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import './App.css';
 import { fetchCategories, fetchAllCategoryCounts } from './services/triviaApi';
 import { CategoryList } from './components/CategoryList';
 import { CategoryDistributionChart } from './components/CategoryDistributionChart';
+import { DifficultyDistributionChart } from './components/DifficultyDistributionChart';
+import { CategoryFilter } from './components/CategoryFilter';
 import { Loading } from './components/Loading';
 import { ErrorMessage } from './components/ErrorMessage';
 import type { Category, CategoryCountResponse } from './types';
@@ -11,6 +13,7 @@ function App() {
   // useState hooks to manage state
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoryCounts, setCategoryCounts] = useState<CategoryCountResponse[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,6 +34,7 @@ function App() {
         console.log('Fetching category counts...');
         const countsData = await fetchAllCategoryCounts(categoriesData);
         setCategoryCounts(countsData);
+        
         console.log('Category counts loaded:', countsData.length);
         
       } catch (err) {
@@ -44,6 +48,21 @@ function App() {
 
     loadData();
   }, []); // Empty dependency array = run once on mount
+
+  // useMemo to filter category counts based on selected category
+  // This avoids recalculating on every render - only when dependencies change
+  const filteredCategoryCounts = useMemo(() => {
+    if (selectedCategoryId === null) {
+      return categoryCounts; // Show all categories
+    }
+    // Filter to show only the selected category
+    return categoryCounts.filter(count => count.category_id === selectedCategoryId);
+  }, [categoryCounts, selectedCategoryId]);
+
+  // Handler function for category selection
+  const handleSelectCategory = (categoryId: number | null) => {
+    setSelectedCategoryId(categoryId);
+  };
 
   // Conditional rendering based on state
   if (loading) {
@@ -61,9 +80,17 @@ function App() {
         <p>Visualizing {categories.length} categories</p>
       </header>
       <main>
+        <CategoryFilter 
+          categories={categories}
+          selectedCategoryId={selectedCategoryId}
+          onSelectCategory={handleSelectCategory}
+        />
         <CategoryDistributionChart 
           categories={categories} 
-          categoryCounts={categoryCounts} 
+          categoryCounts={filteredCategoryCounts} 
+        />
+        <DifficultyDistributionChart 
+          categoryCounts={filteredCategoryCounts} 
         />
         <CategoryList categories={categories} />
       </main>

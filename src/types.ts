@@ -39,3 +39,13 @@ export interface CategoryDistributionChartProps {
   categories: Category[];
   categoryCounts: CategoryCountResponse[];
 }
+
+export interface DifficultyDistributionChartProps {
+  categoryCounts: CategoryCountResponse[];
+}
+
+export const COLORS = {
+  easy: '#4ade80',    // green
+  medium: '#fbbf24',  // yellow/orange
+  hard: '#f87171'     // red
+};
