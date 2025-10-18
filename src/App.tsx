@@ -92,7 +92,7 @@ function App() {
         <DifficultyDistributionChart 
           categoryCounts={filteredCategoryCounts} 
         />
-        <CategoryList categories={categories} />
+        {/* <CategoryList categories={categories} /> */}
       </main>
     </div>
   );
