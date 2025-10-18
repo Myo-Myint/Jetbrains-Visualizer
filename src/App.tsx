@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import './App.css';
 import { fetchCategories, fetchAllCategoryCounts } from './services/triviaApi';
-import { CategoryList } from './components/CategoryList';
 import { CategoryDistributionChart } from './components/CategoryDistributionChart';
 import { DifficultyDistributionChart } from './components/DifficultyDistributionChart';
 import { CategoryFilter } from './components/CategoryFilter';

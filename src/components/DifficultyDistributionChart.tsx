@@ -1,8 +1,7 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import type { DifficultyDistributionChartProps } from '../types';
+import type { PieLabelRenderProps } from 'recharts';
 import { COLORS } from '../types';
-
-
 
 export const DifficultyDistributionChart = ({ categoryCounts }: DifficultyDistributionChartProps) => {
   // Aggregate difficulty counts across all categories
@@ -19,12 +18,12 @@ export const DifficultyDistributionChart = ({ categoryCounts }: DifficultyDistri
     { name: 'Medium', value: totalMedium, color: COLORS.medium },
     { name: 'Hard', value: totalHard, color: COLORS.hard }
   ];
-
   // Custom label to show percentage
-  const renderLabel = (entry: any) => {
+  const renderLabel = (props: PieLabelRenderProps) => {
     const total = totalEasy + totalMedium + totalHard;
-    const percent = ((entry.value / total) * 100).toFixed(1);
-    return `${percent}%`;
+    const value = typeof props.value === 'number' ? props.value : Number(props.value) || 0;
+    const ratio = typeof props.percent === 'number' ? props.percent : (total > 0 ? value / total : 0);
+    return `${(ratio * 100).toFixed(1)}%`;
   };
 
   return (
