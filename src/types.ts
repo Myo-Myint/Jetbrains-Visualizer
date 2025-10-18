@@ -45,7 +45,7 @@ export interface DifficultyDistributionChartProps {
 }
 
 export const COLORS = {
-  easy: '#4ade80',    // green
-  medium: '#fbbf24',  // yellow/orange
-  hard: '#f87171'     // red
+  easy: '#8cb369',    // green
+  medium: '#ffd97d',  // yellow/orange
+  hard: '#ff9b85'     // red
 };

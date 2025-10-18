@@ -27,8 +27,8 @@ export const DifficultyDistributionChart = ({ categoryCounts }: DifficultyDistri
   };
 
   return (
-    <div>
-      <h2>Question Distribution by Difficulty</h2>
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <h2 className="text-2xl font-bold text-gray-900 mb-4">Questions Distribution by Difficulty</h2>
       <ResponsiveContainer width="100%" height={400}>
         <PieChart>
           <Pie
@@ -45,17 +45,36 @@ export const DifficultyDistributionChart = ({ categoryCounts }: DifficultyDistri
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>
-          <Tooltip />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: '#fff', 
+              border: '1px solid #e5e7eb', 
+              borderRadius: '8px',
+              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+            }}
+          />
           <Legend />
         </PieChart>
       </ResponsiveContainer>
-      <div style={{ textAlign: 'center', marginTop: '20px' }}>
-        <p>
-          <strong>Easy:</strong> {totalEasy} | 
-          <strong> Medium:</strong> {totalMedium} | 
-          <strong> Hard:</strong> {totalHard}
+      <div className="mt-6 grid grid-cols-3 gap-4 text-center">
+        <div className="p-3 rounded-lg border" style={{ backgroundColor: '#8cb36920', borderColor: '#8cb369' }}>
+          <p className="text-sm font-medium" style={{ color: '#6a8f52' }}>Easy</p>
+          <p className="text-2xl font-bold" style={{ color: '#5a7e42' }}>{totalEasy}</p>
+        </div>
+        <div className="p-3 rounded-lg border" style={{ backgroundColor: '#ffd97d20', borderColor: '#ffd97d' }}>
+          <p className="text-sm font-medium" style={{ color: '#d9b558' }}>Medium</p>
+          <p className="text-2xl font-bold" style={{ color: '#c9a548' }}>{totalMedium}</p>
+        </div>
+        <div className="p-3 rounded-lg border" style={{ backgroundColor: '#ff9b8520', borderColor: '#ff9b85' }}>
+          <p className="text-sm font-medium" style={{ color: '#e67a66' }}>Hard</p>
+          <p className="text-2xl font-bold" style={{ color: '#d96b57' }}>{totalHard}</p>
+        </div>
+      </div>
+      <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200 text-center">
+        <p className="text-gray-600">
+          <span className="font-semibold">Total Questions:</span>{' '}
+          <span className="text-lg font-bold text-gray-900">{totalEasy + totalMedium + totalHard}</span>
         </p>
-        <p><strong>Total Questions:</strong> {totalEasy + totalMedium + totalHard}</p>
       </div>
     </div>
   );

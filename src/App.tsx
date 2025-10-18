@@ -73,25 +73,30 @@ function App() {
   }
 
   return (
-    <div className="app">
-      <header>
-        <h1>Open Trivia Database Visualizer</h1>
-        <p>Visualizing {categories.length} categories</p>
+    <div className="min-h-screen" style={{ backgroundColor: '#f4f3ee' }}>
+      <header className="text-white shadow-lg" style={{ backgroundColor: '#3a5a40' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <h1 className="text-4xl font-bold mb-2">Open Trivia Database Visualizer</h1>
+          <p className="text-gray-100 text-lg">
+            Visualizing the Open Trivia Database distributions by categories and question .
+          </p>
+        </div>
       </header>
-      <main>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <CategoryFilter 
           categories={categories}
           selectedCategoryId={selectedCategoryId}
           onSelectCategory={handleSelectCategory}
         />
-        <CategoryDistributionChart 
-          categories={categories} 
-          categoryCounts={filteredCategoryCounts} 
-        />
-        <DifficultyDistributionChart 
-          categoryCounts={filteredCategoryCounts} 
-        />
-        {/* <CategoryList categories={categories} /> */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <CategoryDistributionChart 
+            categories={categories} 
+            categoryCounts={filteredCategoryCounts} 
+          />
+          <DifficultyDistributionChart 
+            categoryCounts={filteredCategoryCounts} 
+          />
+        </div>
       </main>
     </div>
   );
