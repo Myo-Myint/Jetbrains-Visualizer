@@ -35,3 +35,7 @@ export interface CategoryCountResponse {
   };
 }
 
+export interface CategoryDistributionChartProps {
+  categories: Category[];
+  categoryCounts: CategoryCountResponse[];
+}
