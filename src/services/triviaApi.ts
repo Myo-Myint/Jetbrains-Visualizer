@@ -45,11 +45,16 @@ export const fetchCategoryCount = async (categoryId: number): Promise<CategoryCo
  * Makes multiple API calls with rate limiting
  * 
  * @param categories - Array of categories to fetch counts for
+ * @param onProgress - Optional callback to track progress (current, total)
  */
-export const fetchAllCategoryCounts = async (categories: Category[]): Promise<CategoryCountResponse[]> => {
+export const fetchAllCategoryCounts = async (
+  categories: Category[], 
+  onProgress?: (current: number, total: number) => void
+): Promise<CategoryCountResponse[]> => {
   const counts: CategoryCountResponse[] = [];
+  const total = categories.length;
   
-  for (let i = 0; i < categories.length; i++) {
+  for (let i = 0; i < total; i++) {
     // Add small delay to respect rate limiting
     if (i > 0) {
       await new Promise(resolve => setTimeout(resolve, 200));
@@ -58,6 +63,11 @@ export const fetchAllCategoryCounts = async (categories: Category[]): Promise<Ca
     try {
       const count = await fetchCategoryCount(categories[i].id);
       counts.push(count);
+      
+      // Report progress
+      if (onProgress) {
+        onProgress(i + 1, total);
+      }
     } catch (error) {
       console.error(`Failed to fetch count for category ${categories[i].id}:`, error);
       // Continue with other categories even if one fails

@@ -14,6 +14,8 @@ function App() {
   const [categoryCounts, setCategoryCounts] = useState<CategoryCountResponse[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingProgress, setLoadingProgress] = useState<number>(0);
+  const [loadingMessage, setLoadingMessage] = useState<string>('Initializing...');
   const [error, setError] = useState<string | null>(null);
 
   // useEffect hook to fetch data when component mounts
@@ -22,17 +24,29 @@ function App() {
       try {
         setLoading(true);
         setError(null);
+        setLoadingProgress(0);
         
         // Step 1: Fetch categories
+        setLoadingMessage('Fetching categories...');
+        setLoadingProgress(10);
         console.log('Fetching categories...');
         const categoriesData = await fetchCategories();
         setCategories(categoriesData);
+        setLoadingProgress(30);
         console.log('Categories loaded:', categoriesData.length);
         
         // Step 2: Fetch question counts for all categories
+        setLoadingMessage('Fetching question counts...');
         console.log('Fetching category counts...');
-        const countsData = await fetchAllCategoryCounts(categoriesData);
+        const countsData = await fetchAllCategoryCounts(categoriesData, (current, total) => {
+          // Calculate progress: 30% base + 70% for fetching counts
+          const fetchProgress = (current / total) * 70;
+          setLoadingProgress(30 + fetchProgress);
+          setLoadingMessage(`Fetching questions from the api...`);
+        });
         setCategoryCounts(countsData);
+        setLoadingProgress(100);
+        setLoadingMessage('Complete!');
         
         console.log('Category counts loaded:', countsData.length);
         
@@ -65,7 +79,7 @@ function App() {
 
   // Conditional rendering based on state
   if (loading) {
-    return <Loading message="Fetching trivia data... This may take a moment." />;
+    return <Loading message={loadingMessage} progress={loadingProgress} />;
   }
 
   if (error) {
