@@ -25,7 +25,7 @@ export interface TriviaApiResponse {
 
 
 //  https://opentdb.com/api_count.php?category=CATEGORY_ID
-export interface CategoryCount {
+export interface CategoryCountResponse {
   category_id: number;
   category_question_count: {
     total_question_count: number;

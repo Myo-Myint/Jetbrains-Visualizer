@@ -1,4 +1,10 @@
-import type { CategoryApiResponse, TriviaApiResponse, Category, Question } from '../types';
+import type { 
+  CategoryApiResponse, 
+  TriviaApiResponse, 
+  Category, 
+  Question,
+  CategoryCountResponse 
+} from '../types';
 
 const BASE_URL = 'https://opentdb.com';
 
@@ -16,6 +22,54 @@ export const fetchCategories = async (): Promise<Category[]> => {
   const data: CategoryApiResponse = await response.json();
   return data.trivia_categories;
 };
+
+/**
+ * Fetch question count for a specific category
+ * Endpoint: https://opentdb.com/api_count.php?category=CATEGORY_ID
+ * 
+ * @param categoryId - The category ID to get question count for
+ */
+export const fetchCategoryCount = async (categoryId: number): Promise<CategoryCountResponse> => {
+  const response = await fetch(`${BASE_URL}/api_count.php?category=${categoryId}`);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch category count: ${response.status}`);
+  }
+  
+  const data: CategoryCountResponse = await response.json();
+  return data;
+};
+
+/**
+ * Fetch question counts for all categories
+ * Makes multiple API calls with rate limiting
+ * 
+ * @param categories - Array of categories to fetch counts for
+ */
+export const fetchAllCategoryCounts = async (categories: Category[]): Promise<CategoryCountResponse[]> => {
+  const counts: CategoryCountResponse[] = [];
+  
+  for (let i = 0; i < categories.length; i++) {
+    // Add small delay to respect rate limiting
+    if (i > 0) {
+      await new Promise(resolve => setTimeout(resolve, 200));
+    }
+    
+    try {
+      const count = await fetchCategoryCount(categories[i].id);
+      counts.push(count);
+    } catch (error) {
+      console.error(`Failed to fetch count for category ${categories[i].id}:`, error);
+      // Continue with other categories even if one fails
+    }
+  }
+  
+  return counts;
+};
+
+
+
+
 
 /**
  * Fetch questions from the API
