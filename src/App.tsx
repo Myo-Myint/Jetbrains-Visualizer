@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import { fetchCategories } from './services/triviaApi';
+import { CategoryList } from './components/CategoryList';
+import { Loading } from './components/Loading';
+import { ErrorMessage } from './components/ErrorMessage';
 import type { Category } from './types';
 
 function App() {
@@ -33,39 +36,23 @@ function App() {
     loadCategories();
   }, []); // Empty dependency array = run once on mount
 
+  // Conditional rendering based on state
   if (loading) {
-    return (
-      <div className="app">
-        <h1>Loading...</h1>
-        <p>Fetching categories from Open Trivia DB...</p>
-      </div>
-    );
+    return <Loading message="Fetching categories from Open Trivia DB..." />;
   }
 
   if (error) {
-    return (
-      <div className="app">
-        <h1>Error</h1>
-        <p style={{ color: 'red' }}>{error}</p>
-      </div>
-    );
+    return <ErrorMessage message={error} />;
   }
 
   return (
     <div className="app">
-      <h1>Trivia Categories</h1>
-      <p>Found {categories.length} categories</p>
-      
-      <div style={{ marginTop: '20px' }}>
-        <h2>Categories List:</h2>
-        <ul style={{ textAlign: 'left', maxWidth: '600px', margin: '0 auto' }}>
-          {categories.map((category) => (
-            <li key={category.id}>
-              <strong>ID {category.id}:</strong> {category.name}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <header>
+        <h1>Open Trivia Database Visualizer</h1>
+      </header>
+      <main>
+        <CategoryList categories={categories} />
+      </main>
     </div>
   );
 }
